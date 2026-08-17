@@ -1,0 +1,12 @@
+name: nordvind
+version: "1.0.0"
+profile: nordvind
+
+model-paths: ["models"]
+
+models:
+  nordvind:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

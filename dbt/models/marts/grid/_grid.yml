@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: fct_consumption_by_area_daily
+    description: Daily electricity consumption per grid area. No personal data.
+    columns:
+      - name: grid_area
+        data_tests: [not_null]
+      - name: reading_date
+        data_tests: [not_null]

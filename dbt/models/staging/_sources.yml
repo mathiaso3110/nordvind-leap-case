@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: metering
+    database: RAW
+    schema: METERING
+    tables:
+      - name: meter_readings
