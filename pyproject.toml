@@ -1,0 +1,16 @@
+[project]
+name = "nordvind-platform"
+version = "0.1.0"
+description = "Snowflake platform for Nordvind Energi: Terraform infrastructure, dbt transformations."
+# dbt does not support 3.13+ yet; the meter data generator is stdlib-only.
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "dbt-snowflake (>=1.12,<2.0)",
+]
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"

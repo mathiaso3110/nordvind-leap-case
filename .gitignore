@@ -1,14 +1,12 @@
 CASE_CONTEXT.md
 
 .env
-*.p8
-*.pem
 
 .terraform/
 *.tfstate
 *.tfstate.*
 
-.venv/
+.venv/*
 target/
 dbt_packages/
 logs/
