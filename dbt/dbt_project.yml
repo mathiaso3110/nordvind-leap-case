@@ -4,9 +4,15 @@ profile: nordvind
 
 model-paths: ["models"]
 
+# CREATE OR REPLACE drops object-level grants, so dbt reapplies them on every run.
+# Grants go to access roles, never to a team role or a person.
 models:
   nordvind:
-    staging:
+    detail:
       +materialized: view
+      +grants:
+        select: ["AR_PROD_DETAIL_READ"]
     reporting:
       +materialized: table
+      +grants:
+        select: ["AR_PROD_AGG_READ"]

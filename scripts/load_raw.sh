@@ -18,7 +18,8 @@ CSV=$(mktemp --suffix=.csv)
 trap 'rm -f "$CSV"' EXIT
 python3 scripts/generate_meter_data.py > "$CSV"
 
-snow stage copy "$CSV" @RAW.PUBLIC.LANDING -x \
+# @%METER_READINGS is the table's own implicit stage — no stage object needed.
+snow stage copy "$CSV" @RAW.PUBLIC.%METER_READINGS -x \
   --account "${SNOWFLAKE_ORGANIZATION_NAME}-${SNOWFLAKE_ACCOUNT_NAME}" \
   --user "${SNOWFLAKE_USER}" \
   --private-key-file "${HOME}/.snowflake/rsa_key.p8" \
@@ -28,7 +29,7 @@ snow stage copy "$CSV" @RAW.PUBLIC.LANDING -x \
 "${SNOW[@]}" -q "
 truncate table RAW.PUBLIC.METER_READINGS;
 copy into RAW.PUBLIC.METER_READINGS
-  from @RAW.PUBLIC.LANDING/$(basename "$CSV")
+  from @RAW.PUBLIC.%METER_READINGS/$(basename "$CSV")
   force = true
   file_format = (type = csv skip_header = 1 field_optionally_enclosed_by = '\"');
 select count(*) as rows_loaded from RAW.PUBLIC.METER_READINGS;

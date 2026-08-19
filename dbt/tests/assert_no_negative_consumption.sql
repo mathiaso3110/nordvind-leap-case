@@ -4,5 +4,5 @@
 -- Singular test rather than dbt_utils.accepted_range: three lines beats a package.
 
 select region, subregion, reading_date, consumption_kwh
-from {{ ref('fct_consumption_by_area_daily') }}
+from {{ ref('consumption_by_area_daily') }}
 where consumption_kwh < 0

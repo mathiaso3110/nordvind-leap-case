@@ -40,13 +40,6 @@ resource "snowflake_table" "meter_readings" {
   }
 }
 
-resource "snowflake_stage" "landing" {
-  database = snowflake_database.raw.name
-  schema   = "PUBLIC"
-  name     = "LANDING"
-  comment  = "Stand-in for the Azure Blob container Snowpipe would watch."
-}
-
 # No provider resource attaches a row access policy to a table, so this is the
 # escape hatch. revert runs on destroy, which is why the policy can be dropped
 # cleanly.
