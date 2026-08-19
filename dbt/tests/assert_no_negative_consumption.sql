@@ -3,6 +3,6 @@
 -- separate meter register.
 -- Singular test rather than dbt_utils.accepted_range: three lines beats a package.
 
-select grid_area, reading_date, consumption_kwh
+select region, subregion, reading_date, consumption_kwh
 from {{ ref('fct_consumption_by_area_daily') }}
 where consumption_kwh < 0

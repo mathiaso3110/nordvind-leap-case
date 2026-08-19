@@ -3,8 +3,9 @@
 
 select
     meter_id,
-    customer_id,
-    grid_area,
-    read_at        as read_at_utc,
-    kwh            as consumption_kwh
+    cpr,
+    region,
+    subregion,
+    read_at   as read_at_utc,
+    kwh       as consumption_kwh
 from {{ source('metering', 'meter_readings') }}

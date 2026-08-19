@@ -1,14 +1,14 @@
 # No secrets here — everything comes from the environment (see .env.example).
 nordvind:
-  target: dev
+  target: prod
   outputs:
-    dev:
+    prod:
       type: snowflake
       account: "{{ env_var('SNOWFLAKE_ORGANIZATION_NAME') }}-{{ env_var('SNOWFLAKE_ACCOUNT_NAME') }}"
       user: "{{ env_var('SNOWFLAKE_USER') }}"
       private_key_path: "{{ env_var('HOME') }}/.snowflake/rsa_key.p8"
       role: TRANSFORMER
-      warehouse: TRANSFORMING_WH
+      warehouse: WH_TRANSFORM
       database: PROD
       schema: ANALYTICS
       threads: 4

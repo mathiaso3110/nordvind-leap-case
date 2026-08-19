@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Stand-in for ingestion: generate readings and land them in RAW.
-# Production would be Snowpipe auto-ingesting from Azure Blob; the table below
-# would be created by the ingestion pipeline, not by this script.
+# Production would be Snowpipe auto-ingesting from Azure Blob. The table and
+# stage are Terraform's — this script only puts rows in them.
 #
 # Usage:  set -a; source .env; set +a;  ./scripts/load_raw.sh
 set -euo pipefail
@@ -18,18 +18,7 @@ CSV=$(mktemp --suffix=.csv)
 trap 'rm -f "$CSV"' EXIT
 python3 scripts/generate_meter_data.py > "$CSV"
 
-"${SNOW[@]}" -q "
-create table if not exists RAW.METERING.METER_READINGS (
-  meter_id    string,
-  customer_id string,
-  grid_area   string,
-  read_at     timestamp_ntz,
-  kwh         number(10,3)
-);
-create stage if not exists RAW.METERING.LANDING;
-"
-
-snow stage copy "$CSV" @RAW.METERING.LANDING -x \
+snow stage copy "$CSV" @RAW.PUBLIC.LANDING -x \
   --account "${SNOWFLAKE_ORGANIZATION_NAME}-${SNOWFLAKE_ACCOUNT_NAME}" \
   --user "${SNOWFLAKE_USER}" \
   --private-key-file "${HOME}/.snowflake/rsa_key.p8" \
@@ -37,10 +26,10 @@ snow stage copy "$CSV" @RAW.METERING.LANDING -x \
 
 # truncate + reload: this is a demo source, not an incremental pipeline yet.
 "${SNOW[@]}" -q "
-truncate table RAW.METERING.METER_READINGS;
-copy into RAW.METERING.METER_READINGS
-  from @RAW.METERING.LANDING/$(basename "$CSV")
+truncate table RAW.PUBLIC.METER_READINGS;
+copy into RAW.PUBLIC.METER_READINGS
+  from @RAW.PUBLIC.LANDING/$(basename "$CSV")
   force = true
   file_format = (type = csv skip_header = 1 field_optionally_enclosed_by = '\"');
-select count(*) as rows_loaded from RAW.METERING.METER_READINGS;
+select count(*) as rows_loaded from RAW.PUBLIC.METER_READINGS;
 "

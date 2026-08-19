@@ -8,5 +8,5 @@ models:
   nordvind:
     staging:
       +materialized: view
-    marts:
+    reporting:
       +materialized: table

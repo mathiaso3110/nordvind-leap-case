@@ -3,6 +3,6 @@ version: 2
 sources:
   - name: metering
     database: RAW
-    schema: METERING
+    schema: PUBLIC
     tables:
       - name: meter_readings
