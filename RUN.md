@@ -17,6 +17,19 @@ cd ..
 `plan` first, always: it is the only place you see a destructive change before
 it happens. Look for `forces replacement` on anything holding data.
 
+Then, once, as `ACCOUNTADMIN`:
+
+```sql
+grant select on all tables in schema RAW.PUBLIC to role AR_RAW_READ;
+```
+
+Terraform's `ALL TABLES` grant is a snapshot taken at apply time, and nothing
+ties it to `METER_READINGS`, so it can run before the table exists. The
+`FUTURE TABLES` grant only covers tables created after it. The table lands
+between the two and `TRANSFORMER` gets no `SELECT` — dbt then fails with
+`Object 'RAW.PUBLIC.METER_READINGS' does not exist or not authorized`. This
+line closes the gap by hand; rerun it after any `destroy` + `apply`.
+
 The rest runs from the repo root:
 
 ```bash
