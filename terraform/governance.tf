@@ -43,7 +43,7 @@ resource "snowflake_masking_policy" "mask_cpr" {
 
   body = "case when is_role_in_session('AR_PROD_SENSITIVE') then val else '******-****' end"
 
-  comment = "CPR is visible only to roles holding AR_PROD_SENSITIVE. ACCOUNTADMIN included — a superuser has no business reading CPR casually."
+  comment = "CPR is visible only to roles holding AR_PROD_SENSITIVE. "
 }
 
 # Applied to the RAW column. Views inherit it, so the dbt staging model is
